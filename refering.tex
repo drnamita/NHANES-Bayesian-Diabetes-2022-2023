@@ -1,0 +1,120 @@
+Articles for the Introduction
+1. CDC/NCHS — NHANES 2021–2023 diabetes prevalence
+
+This is the most directly relevant source for your study population and justification for using NHANES 2021–2023.
+
+Gwira JA, Fryar CD, Gu Q. Prevalence of Total, Diagnosed, and Undiagnosed Diabetes in Adults: United States, August 2021–August 2023. NCHS Data Brief. 2024;516.
+
+The report estimates 15.8% total diabetes prevalence, 11.3% diagnosed diabetes, and 4.5% undiagnosed diabetes among U.S. adults during August 2021–August 2023. It also demonstrates increasing diabetes prevalence with age and increasing weight status.
+
+CDC/NCHS — Prevalence of Total, Diagnosed, and Undiagnosed Diabetes, August 2021–August 2023
+
+Use in Introduction for:
+
+burden of diabetes
+relevance of NHANES
+age/BMI as important predictors
+rationale for studying diabetes risk in contemporary U.S. adults.
+2. Bayesian Analysis Reporting Guidelines
+
+This is probably the single most important methodological article for your paper's rationale.
+
+Kruschke JK, Liddell TM. Bayesian Analysis Reporting Guidelines. Nature Human Behaviour. 2018;2:163–166.
+
+The guidelines specifically recommend evaluating how sensitive posterior inference is to the choice of prior, particularly when informative priors are used.
+
+Bayesian Analysis Reporting Guidelines — PMC
+
+Use in Introduction for:
+
+Because Bayesian inference combines observed data with prior information, conclusions may depend on the specification of the prior distribution. Consequently, assessment of posterior sensitivity to alternative prior distributions is an important component of transparent Bayesian analysis.
+
+This fits your study extremely well.
+
+3. Weakly informative priors in epidemiologic regression
+
+Hamra GB, MacLehose RF, Cole SR. Sensitivity Analyses for Sparse-Data Problems—Using Weakly Informative Bayesian Priors. Epidemiology. 2013;24(2):233–239.
+
+This paper is particularly useful because it is epidemiologic regression, rather than a purely theoretical Bayesian statistics paper. It demonstrates that weakly informative priors can stabilize estimates when information in the data is limited, while having little influence when the data are sufficiently informative.
+
+Hamra et al. — Sensitivity Analyses for Sparse-Data Problems Using Weakly Informative Bayesian Priors
+
+Use in Introduction for:
+
+Weakly informative priors have been proposed as a practical approach for stabilizing regression estimates while allowing the observed data to remain the primary source of information.
+
+4. Prior sensitivity in large Bayesian models
+
+Gustafson P. / related prior-sensitivity literature — this literature is useful for explaining the fundamental concept that posterior estimates can be dominated either by the likelihood or by the prior depending on the relative information contributed by each.
+
+A particularly useful article is:
+
+“Measuring prior sensitivity and prior informativeness in large Bayesian models.”
+
+It explicitly examines how posterior estimates change as prior information is varied and emphasizes that when the likelihood is highly informative, posterior estimates are relatively insensitive to the prior, whereas less informative data can result in greater prior influence.
+
+Measuring prior sensitivity and prior informativeness in large Bayesian models
+
+Use in Introduction for the conceptual framework of your study.
+
+2. Articles for the Discussion
+
+For your Discussion, I would focus much more heavily on prior sensitivity, because that is the actual contribution of your study.
+
+5. Yao et al. 2026 — Bayesian sensitivity analysis is underused
+
+This is a very current and highly relevant paper.
+
+Yao M, Huan J, Liang Q, et al. Sensitivity analysis in Bayesian clinical trials was underused and poorly reported: a systematic survey. BMC Medical Research Methodology. 2026;26:63.
+
+The authors examined 171 Bayesian clinical trials and found that only about half reported sensitivity analyses, while sensitivity analyses specifically addressing prior distributions were conducted in only a minority of studies.
+
+Yao et al. 2026 — Sensitivity analysis in Bayesian clinical trials was underused and poorly reported
+
+This is excellent for your Discussion, because you can say your study addresses a recognized reporting and methodological gap by explicitly comparing:
+
+informative priors
+weakly informative priors
+posterior ORs
+credible intervals
+posterior prevalence
+model fit/LOO
+6. Luta & Ford — Bayesian sensitivity analysis in epidemiology
+
+Luta G, Ford MB. Bayesian sensitivity analysis methods to evaluate bias due to misclassification and missing data using informative priors and external validation data. Cancer Epidemiology. 2013;37(2):121–126.
+
+Although their application is cancer epidemiology rather than diabetes, the methodological message is highly relevant: Bayesian sensitivity analyses can evaluate whether substantive conclusions remain robust under alternative assumptions.
+
+Luta & Ford — Bayesian sensitivity analysis methods to evaluate bias due to misclassification and missing data
+
+Use in Discussion when discussing robustness.
+
+For example:
+
+Previous epidemiologic applications have demonstrated the value of Bayesian sensitivity analyses for evaluating the robustness of substantive conclusions to alternative assumptions and sources of uncertainty.
+
+7. Hamra et al. — weakly informative priors
+
+This should also appear in the Discussion, not just the Introduction.
+
+The important finding for your interpretation is that when the data are highly informative, weakly informative priors may have little effect, whereas prior influence becomes more apparent when the data provide less information.
+
+This gives you a strong framework for interpreting your comparison:
+
+Informative prior → Weakly informative prior
+
+rather than simply saying that one model is "better."
+
+8. Complex survey data and Bayesian inference
+
+Because your dataset is NHANES, you should include literature acknowledging the complication of Bayesian modeling with complex survey data.
+
+A useful recent methodological source is:
+
+Savitsky TD, Leon-Novelo LG, Engle H. Bayesian Inference for Repeated Measures Under Informative Sampling. 2024.
+
+The paper specifically discusses Bayesian inference under complex survey designs and notes that survey weights and informative sampling can affect population inference. It also demonstrates the approach using NHANES data.
+
+BLS — Bayesian Inference for Repeated Measures Under Informative Sampling
+
+This is particularly useful for your limitations/discussion, because your Bayesian model uses normalized examination weights but does not directly incorporate the NHANES PSU and strata structure into the brms likelihood.

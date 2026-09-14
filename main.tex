@@ -1,0 +1,714 @@
+\documentclass[12pt]{article}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{setspace}
+\usepackage{natbib}
+\usepackage[hidelinks]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\onehalfspacing
+
+\title{\textbf{Assessing Prior Sensitivity in Bayesian Logistic Regression of Diabetes Risk Using NHANES 2021--2023}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ============================================================
+% ABSTRACT
+% ============================================================
+
+\begin{abstract}
+
+\textbf{Background:}
+Bayesian logistic regression provides a flexible framework for incorporating prior information into epidemiologic analyses. However, the choice of prior distribution may influence posterior estimates, particularly when informative prior information from previous studies or survey cycles is incorporated. This study evaluated the sensitivity of Bayesian estimates of diabetes risk to alternative prior specifications using nationally representative data from the National Health and Nutrition Examination Survey (NHANES) conducted from August 2021 through August 2023.
+
+\textbf{Methods:}
+The analysis included NHANES participants aged 20 years or older from the August 2021--August 2023 survey cycle. Diabetes diagnosis was defined using the diabetes questionnaire. Predictors included standardized age, standardized body mass index (BMI), sex, and race/ethnicity. Missing predictor values were addressed using multiple imputation by chained equations, with five imputed datasets generated; the first completed imputed dataset was subsequently used for model estimation. A conventional survey-weighted logistic regression model accounting for NHANES examination weights, primary sampling units, and strata was fitted as a reference model. Two Bayesian logistic regression models were then estimated using normalized examination weights: one using weakly informative priors and another using informative priors centered on posterior estimates obtained from an earlier NHANES 2013--2014 analysis. Each Bayesian model used four Markov chain Monte Carlo chains with 2,000 iterations per chain, including 1,000 warm-up iterations. Posterior odds ratios, 95\% credible intervals, posterior predictive checks, calibration, posterior diabetes prevalence, and leave-one-out cross-validation were evaluated.
+
+\textbf{Results:}
+The analysis compared conventional survey-weighted estimates with Bayesian estimates obtained under weakly informative and historically informed prior specifications. Differences between the two Bayesian models were evaluated to determine the extent to which posterior inference was influenced by prior information derived from the earlier NHANES cycle.
+
+\textbf{Conclusions:}
+This study provides a prior-sensitivity framework for Bayesian logistic regression using complex survey data. Comparing weakly informative and historically informed Bayesian models with a survey-weighted reference model provides a practical approach for evaluating the robustness of epidemiologic conclusions to prior specification.
+
+\end{abstract}
+
+% ============================================================
+% KEYWORDS
+% ============================================================
+
+\noindent
+\textbf{Keywords:}
+Bayesian logistic regression; diabetes; NHANES; prior sensitivity; survey weighting; multiple imputation; epidemiology; Bayesian statistics
+
+% ============================================================
+% INTRODUCTION
+% ============================================================
+
+\section{Introduction}
+
+Diabetes mellitus is a major public health concern in the United States and is associated with substantial morbidity, mortality, and healthcare utilization. Identifying factors associated with diabetes remains an important component of population-level chronic disease surveillance and epidemiologic research. Nationally representative surveys such as the National Health and Nutrition Examination Survey (NHANES) provide an important source of information for studying diabetes and its associated demographic and anthropometric characteristics.
+
+Logistic regression is commonly used to evaluate associations between binary health outcomes and potential predictors. In analyses of NHANES data, conventional regression models can incorporate the complex survey design through sampling weights, primary sampling units, and strata. These design features are important because NHANES uses a multistage probability sampling framework rather than a simple random sample.
+
+Bayesian logistic regression provides an alternative inferential framework in which prior information is combined with the observed data to produce a posterior distribution for each model parameter. The use of prior information may be particularly useful when previous evidence is available from earlier studies or survey cycles. However, informative priors can also influence posterior estimates, and the magnitude of this influence depends on the strength and location of the prior distribution.
+
+Prior sensitivity analysis is therefore important when Bayesian methods are used for epidemiologic inference. A model that produces similar estimates under weakly informative and informative priors provides evidence that conclusions are relatively robust to prior specification. Conversely, substantial differences may indicate that posterior inference is meaningfully influenced by prior information.
+
+The objective of this study was to assess the sensitivity of Bayesian logistic regression estimates of diabetes risk in NHANES participants from August 2021 through August 2023 to alternative prior specifications. Specifically, we compared a Bayesian model using weakly informative priors with a Bayesian model using informative priors derived from posterior estimates obtained from NHANES 2013--2014. Both Bayesian models were compared with a conventional survey-weighted logistic regression model.
+
+% ============================================================
+% METHODS
+% ============================================================
+
+\section{Methods}
+
+\subsection{Study Design and Data Source}
+
+This study used publicly available data from the National Health and Nutrition Examination Survey (NHANES), conducted by the National Center for Health Statistics (NCHS) of the Centers for Disease Control and Prevention (CDC). NHANES is a cross-sectional survey designed to provide nationally representative information on the health and nutritional status of the noninstitutionalized civilian population of the United States. The survey combines interview information with physical examination and laboratory measurements and uses a complex multistage probability sampling design.
+
+The primary analysis used the NHANES survey cycle conducted from \textbf{August 2021 through August 2023}, corresponding to NHANES Cycle L. Three public-use files were used:
+
+\begin{enumerate}[label=(\alph*)]
+    \item the Demographic Variables and Sample Weights file (\texttt{DEMO\_L}),
+    \item the Body Measures file (\texttt{BMX\_L}), and
+    \item the Diabetes Questionnaire file (\texttt{DIQ\_L}).
+\end{enumerate}
+
+The demographic and body-measures files were used to verify the survey cycle using the NHANES survey-cycle variable \texttt{SDDSRVYR}. The diabetes questionnaire file did not contain this variable and was therefore linked using the participant identification number.
+
+The three files were merged using the unique participant sequence number (\texttt{SEQN}). The resulting dataset contained demographic characteristics, measured body mass index, diabetes diagnosis information, examination weights, primary sampling units, and sampling strata.
+
+A separate NHANES 2013--2014 analysis was used as the historical source of posterior information for construction of the informative priors. Importantly, participants from the 2013--2014 cycle were not included in the 2021--2023 analytic population.
+
+\subsection{Study Population}
+
+The study population consisted of NHANES Cycle L participants aged 20 years or older.
+
+Participants were initially identified from the merged demographic, body-measures, and diabetes questionnaire files. Individuals younger than 20 years were excluded from the analytic population.
+
+The analytic population was then restricted to participants with an observed diabetes outcome. Participants with missing diabetes questionnaire responses were not assigned a diabetes status and were excluded before imputation.
+
+The study population was therefore defined as adults aged 20 years or older who participated in NHANES during August 2021--August 2023 and had an observed diabetes diagnosis status.
+
+\subsection{Outcome Definition}
+
+The primary outcome was self-reported physician-diagnosed diabetes.
+
+Diabetes status was defined using the NHANES diabetes questionnaire variable \texttt{DIQ010}. Participants reporting that a doctor or other health professional had told them that they had diabetes were classified as having diabetes:
+
+\[
+\text{diabetes\_dx} =
+\begin{cases}
+1, & \text{if } \texttt{DIQ010}=1,\\
+0, & \text{if } \texttt{DIQ010}=2.
+\end{cases}
+\]
+
+All other responses, including missing or indeterminate responses, were coded as missing.
+
+The resulting binary outcome was used in both the survey-weighted frequentist model and the Bayesian logistic regression models.
+
+% ============================================================
+% DATA MANAGEMENT
+% ============================================================
+
+\subsection{Predictor Variables and Data Management}
+
+Four predictor domains were included in the regression models: age, BMI, sex, and race/ethnicity.
+
+\subsubsection{Age}
+
+Age was obtained from the NHANES demographic variable \texttt{RIDAGEYR} and was represented in years. For regression modeling, age was standardized using:
+
+\[
+Age_c =
+\frac{Age-\overline{Age}}
+{SD(Age)}.
+\]
+
+Thus, the estimated odds ratio for age represents the change in the odds of diabetes associated with a one-standard-deviation increase in age.
+
+\subsubsection{Body Mass Index}
+
+BMI was obtained from measured body measurements using \texttt{BMXBMI}. BMI was standardized using:
+
+\[
+BMI_c =
+\frac{BMI-\overline{BMI}}
+{SD(BMI)}.
+\]
+
+The corresponding odds ratio therefore represents the change in the odds of diabetes associated with a one-standard-deviation increase in BMI.
+
+\subsubsection{Sex}
+
+Sex was derived from \texttt{RIAGENDR} and categorized as male or female. Male was used as the reference category.
+
+\subsubsection{Race/Ethnicity}
+
+Race/ethnicity was derived from \texttt{RIDRETH3} and categorized into five groups:
+
+\begin{enumerate}
+    \item White,
+    \item Black,
+    \item Hispanic,
+    \item Asian, and
+    \item Other.
+\end{enumerate}
+
+White was used as the reference category.
+
+\subsubsection{NHANES Survey Variables}
+
+The NHANES examination weight (\texttt{WTMEC2YR}) was retained for survey-weighted analyses. The primary sampling unit (\texttt{SDMVPSU}) and sampling stratum (\texttt{SDMVSTRA}) were also retained.
+
+The examination weight was used directly in the complex survey analysis. For the Bayesian analyses, examination weights were normalized by dividing each participant's examination weight by the mean examination weight:
+
+\[
+w_i^{*}
+=
+\frac{w_i}
+{\overline{w}}.
+\]
+
+The normalized weights were incorporated into the Bayesian likelihood.
+
+% ============================================================
+% MISSING DATA
+% ============================================================
+
+\subsection{Missing Data and Multiple Imputation}
+
+Missing data were examined using variable-level missingness summaries and the missing-data pattern generated using the \texttt{mice} package.
+
+Participants with missing diabetes outcome information were excluded before imputation because the outcome was not imputed. Missing values among predictor variables were addressed using multiple imputation by chained equations (MICE).
+
+Five imputed datasets were generated using 20 iterations per imputed dataset. Predictive mean matching was used for age and BMI, logistic regression was used for sex, and multinomial logistic regression was used for race/ethnicity. Diabetes diagnosis was treated as an observed outcome and was not imputed.
+
+Although five completed datasets were generated, the first completed imputed dataset was used for the subsequent regression analyses. Therefore, the regression estimates reported in this analysis were not pooled across the five imputed datasets using conventional multiple-imputation combining procedures.
+
+This distinction is important because the analysis represents a model fitted to the first completed imputed dataset rather than a fully pooled multiple-imputation analysis.
+
+% ============================================================
+% STATISTICAL ANALYSIS
+% ============================================================
+
+\section{Statistical Analysis}
+
+\subsection{Descriptive and Preliminary Analysis}
+
+The analytic dataset was examined following data merging, outcome definition, variable recoding, imputation, and standardization. The distribution of the diabetes outcome and missingness of analytic variables were assessed before model fitting.
+
+Age and BMI were standardized prior to regression modeling. Continuous predictor distributions were evaluated graphically using density plots.
+
+% ============================================================
+% SURVEY MODEL
+% ============================================================
+
+\subsection{Survey-Weighted Logistic Regression}
+
+A survey-weighted logistic regression model was fitted as the conventional reference analysis.
+
+The model was specified as:
+
+\[
+\text{logit}\left[P(Y_i=1)\right]
+=
+\beta_0+
+\beta_1Age_{ci}+
+\beta_2BMI_{ci}+
+\beta_3Sex_i+
+\beta_4Race_i,
+\]
+
+where \(Y_i\) denotes diabetes diagnosis.
+
+The complex NHANES sampling design was incorporated using:
+
+\begin{itemize}
+    \item examination weights (\texttt{WTMEC2YR}),
+    \item primary sampling units (\texttt{SDMVPSU}), and
+    \item sampling strata (\texttt{SDMVSTRA}).
+\end{itemize}
+
+The model was estimated using the \texttt{svyglm} function from the \texttt{survey} package with a quasibinomial family.
+
+Odds ratios were calculated by exponentiating the regression coefficients:
+
+\[
+OR_j = \exp(\beta_j).
+\]
+
+Corresponding 95\% confidence intervals were obtained by exponentiating the confidence limits of the model coefficients.
+
+This survey-weighted model served as the reference model for comparison with the Bayesian analyses.
+
+% ============================================================
+% BAYESIAN MODEL
+% ============================================================
+
+\subsection{Bayesian Logistic Regression}
+
+Bayesian logistic regression models were estimated using the \texttt{brms} package, which interfaces with Stan for Hamiltonian Monte Carlo sampling.
+
+For participant \(i\), the diabetes outcome was modeled as:
+
+\[
+Y_i \sim \text{Bernoulli}(p_i),
+\]
+
+with:
+
+\[
+\text{logit}(p_i)
+=
+\beta_0+
+\beta_1Age_{ci}+
+\beta_2BMI_{ci}+
+\beta_3Sex_i+
+\beta_4Race_i.
+\]
+
+The normalized NHANES examination weights were incorporated into the likelihood using the \texttt{weights()} specification in \texttt{brms}.
+
+The Bayesian analysis therefore incorporated NHANES examination weights but did not explicitly model the NHANES primary sampling units and sampling strata within the Bayesian likelihood. Consequently, the Bayesian models should be interpreted as weighted Bayesian logistic regression models rather than fully design-based Bayesian survey models.
+
+% ============================================================
+% WEAK PRIOR
+% ============================================================
+
+\subsection{Weakly Informative Prior Model}
+
+The first Bayesian model used weakly informative priors designed to provide regularization while exerting limited influence on the posterior estimates.
+
+A Student-\(t\) prior with 3 degrees of freedom, location 0, and scale 10 was specified for the intercept:
+
+\[
+\beta_0
+\sim
+t_3(0,10).
+\]
+
+Normal priors with mean 0 and standard deviation 2.5 were specified for the regression coefficients:
+
+\[
+\beta_j
+\sim
+N(0,2.5^2).
+\]
+
+These priors were selected to be sufficiently broad to allow the observed Cycle L data to dominate the posterior inference while providing weak regularization of the regression coefficients.
+
+% ============================================================
+% INFORMATIVE PRIOR
+% ============================================================
+
+\subsection{Historically Informed Prior Model}
+
+The second Bayesian model incorporated historical information obtained from an earlier NHANES 2013--2014 analysis.
+
+Posterior means from the earlier Bayesian model were used as the centers of normal prior distributions for the intercept, standardized age, standardized BMI, and female sex coefficient. A common standard deviation of 0.25 was used for these informative priors.
+
+The priors were specified as:
+
+\[
+\beta_0
+\sim
+N(-2.6633,0.25^2),
+\]
+
+\[
+\beta_{\text{age}}
+\sim
+N(1.0969,0.25^2),
+\]
+
+\[
+\beta_{\text{BMI}}
+\sim
+N(0.6282,0.25^2),
+\]
+
+and
+
+\[
+\beta_{\text{female}}
+\sim
+N(-0.6625,0.25^2).
+\]
+
+These prior distributions represent historical information from the earlier NHANES analysis rather than information estimated from the current 2021--2023 dataset.
+
+The race/ethnicity coefficients were not assigned separately specified informative priors in the implemented model and therefore retained the default Bayesian prior specification.
+
+The historical-prior model was used to determine whether incorporating information from an earlier NHANES cycle materially changed posterior estimates obtained from the more recent survey cycle.
+
+% ============================================================
+% PRIOR SENSITIVITY
+% ============================================================
+
+\subsection{Prior Sensitivity Analysis}
+
+The primary methodological comparison evaluated the sensitivity of Bayesian posterior estimates to prior specification.
+
+Two Bayesian models were compared:
+
+\begin{enumerate}
+    \item a weakly informative prior model; and
+    \item a historically informed prior model based on NHANES 2013--2014 posterior estimates.
+\end{enumerate}
+
+For each model, posterior odds ratios were calculated as:
+
+\[
+OR_j = \exp(\beta_j).
+\]
+
+The 95\% credible interval for each odds ratio was obtained by exponentiating the 2.5th and 97.5th percentiles of the corresponding posterior coefficient distribution.
+
+The difference between the two prior specifications was quantified using the absolute odds-ratio difference:
+
+\[
+\Delta OR =
+OR_{\text{informative}}
+-
+OR_{\text{weak}},
+\]
+
+the percentage difference:
+
+\[
+\%\Delta OR =
+100
+\times
+\frac{
+OR_{\text{informative}}
+-
+OR_{\text{weak}}
+}{
+OR_{\text{weak}}
+},
+\]
+
+and the odds-ratio ratio:
+
+\[
+OR_{\text{ratio}}
+=
+\frac{
+OR_{\text{informative}}
+}{
+OR_{\text{weak}}
+}.
+\]
+
+The magnitude and direction of these differences were used to evaluate the extent to which posterior inference depended on prior specification.
+
+% ============================================================
+% MCMC
+% ============================================================
+
+\subsection{Markov Chain Monte Carlo Sampling and Convergence}
+
+Bayesian estimation used Hamiltonian Monte Carlo implemented through Stan.
+
+Each Bayesian model was estimated using four Markov chains. Each chain included 2,000 iterations, with the first 1,000 iterations designated as warm-up. Thus, 4,000 post-warm-up draws were obtained across the four chains.
+
+The target acceptance probability was increased to 0.95 using the \texttt{adapt\_delta} control parameter.
+
+Convergence and sampling efficiency were assessed using:
+
+\begin{itemize}
+    \item the potential scale reduction statistic (\(\widehat{R}\)),
+    \item bulk effective sample size,
+    \item tail effective sample size, and
+    \item trace plots.
+\end{itemize}
+
+Values of \(\widehat{R}\) close to 1.00 were considered indicative of satisfactory convergence.
+
+% ============================================================
+% POSTERIOR PREDICTIVE
+% ============================================================
+
+\subsection{Posterior Predictive Checks}
+
+Posterior predictive checks were performed to evaluate whether the fitted Bayesian models generated outcome distributions reasonably consistent with the observed data.
+
+Both bar-based posterior predictive checks and density-overlay posterior predictive checks were examined using 100 posterior draws.
+
+These diagnostics were used to assess whether the models adequately reproduced the observed binary diabetes outcome distribution.
+
+% ============================================================
+% PREVALENCE
+% ============================================================
+
+\subsection{Posterior Predicted Diabetes Prevalence}
+
+Posterior expected probabilities were generated for the analytic population using posterior draws from each Bayesian model.
+
+For posterior draw \(s\), predicted diabetes prevalence was calculated as:
+
+\[
+\widehat{P}^{(s)}
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+p_i^{(s)}.
+\]
+
+A posterior distribution of predicted diabetes prevalence was therefore obtained for each prior specification.
+
+The median and 95\% credible interval of posterior predicted prevalence were calculated separately for the weakly informative and historically informed Bayesian models.
+
+% ============================================================
+% CALIBRATION
+% ============================================================
+
+\subsection{Calibration}
+
+Calibration was assessed by ranking participants according to their predicted probability of diabetes and dividing the population into 10 prediction groups using deciles of predicted risk.
+
+For each decile, the mean predicted probability was calculated and compared with the observed proportion of participants with diabetes.
+
+Calibration was visualized by plotting observed diabetes prevalence against mean predicted probability. A 45-degree reference line represented perfect calibration.
+
+% ============================================================
+% LOO
+% ============================================================
+
+\subsection{Leave-One-Out Cross-Validation}
+
+Approximate leave-one-out cross-validation (LOO) was used to compare the predictive performance of the weakly informative and historically informed Bayesian models.
+
+The LOO expected log predictive density was calculated using the \texttt{loo} package. Model comparisons were based on the relative expected predictive performance of the two Bayesian specifications.
+
+The LOO comparison was interpreted as a secondary model evaluation rather than as a replacement for epidemiologic interpretation of the regression coefficients.
+
+% ============================================================
+% COMPARISON
+% ============================================================
+
+\subsection{Comparison of Frequentist and Bayesian Estimates}
+
+Three model specifications were compared:
+
+\begin{enumerate}
+    \item survey-weighted logistic regression;
+    \item Bayesian logistic regression with weakly informative priors; and
+    \item Bayesian logistic regression with historically informed priors.
+\end{enumerate}
+
+The survey-weighted model produced odds ratios with 95\% confidence intervals, whereas the Bayesian models produced posterior odds ratios with 95\% credible intervals.
+
+A publication-ready comparison table was constructed containing the odds ratio and uncertainty interval for each predictor across all three models.
+
+Agreement between the Bayesian estimates and the survey-weighted estimates was evaluated descriptively. Differences between the weakly informative and historically informed Bayesian estimates were used to assess prior sensitivity.
+
+% ============================================================
+% SOFTWARE
+% ============================================================
+
+\subsection{Statistical Software}
+
+All data management and statistical analyses were conducted in R.
+
+The following R packages were used:
+
+\begin{itemize}
+    \item \texttt{haven} for importing NHANES XPT files;
+    \item \texttt{dplyr} for data management and transformation;
+    \item \texttt{mice} for multiple imputation;
+    \item \texttt{survey} for complex survey-weighted regression;
+    \item \texttt{brms} for Bayesian logistic regression;
+    \item \texttt{Stan} through \texttt{brms} for Hamiltonian Monte Carlo sampling;
+    \item \texttt{posterior} for posterior diagnostics;
+    \item \texttt{loo} for leave-one-out cross-validation;
+    \item \texttt{ggplot2} for graphical analyses; and
+    \item \texttt{tibble} for data manipulation.
+\end{itemize}
+
+A fixed random seed of 1234 was used for the imputation and Bayesian analyses to facilitate reproducibility.
+
+% ============================================================
+% ETHICAL CONSIDERATIONS
+% ============================================================
+
+\subsection{Ethical Considerations}
+
+This study used de-identified, publicly available NHANES data. NHANES protocols are reviewed and approved by the National Center for Health Statistics Research Ethics Review Board, and participants provide informed consent as part of the NHANES data collection process. The present secondary analysis did not involve direct participant contact or access to identifiable private information.
+
+% ============================================================
+% RESULTS FRAMEWORK
+% ============================================================
+
+\section{Results}
+
+\subsection{Study Population}
+
+The analytic sample consisted of adult NHANES participants from the August 2021--August 2023 survey cycle who met the age eligibility criterion and had an observed diabetes outcome.
+
+The participant flow should report the number of participants identified in the merged NHANES files, the number excluded because of age, the number excluded because of missing diabetes outcome information, and the final number included in the imputed analytic dataset.
+
+\subsection{Distribution of Diabetes and Predictors}
+
+The prevalence of diabetes and distributions of age, BMI, sex, and race/ethnicity should be summarized for the final analytic population.
+
+Age and BMI were standardized before regression analysis. The distribution of the standardized predictors should be evaluated graphically.
+
+\subsection{Survey-Weighted Regression Results}
+
+The survey-weighted logistic regression model should be reported first as the conventional reference analysis.
+
+For each predictor, the odds ratio and 95\% confidence interval should be presented.
+
+The survey-weighted estimates provide a benchmark for evaluating the corresponding Bayesian posterior estimates.
+
+\subsection{Bayesian Regression Results}
+
+The Bayesian regression results should report posterior odds ratios and 95\% credible intervals for the weakly informative and historically informed prior models.
+
+For each predictor, the posterior estimate should be interpreted as the multiplicative change in the odds of diabetes associated with the corresponding predictor while holding the other covariates constant.
+
+For standardized age and BMI, estimates represent the change associated with a one-standard-deviation increase.
+
+\subsection{Prior Sensitivity}
+
+The primary prior-sensitivity analysis should compare posterior odds ratios under the weakly informative and historically informed prior specifications.
+
+The comparison should identify whether the posterior estimates remain similar across the two prior distributions or whether incorporation of historical information produces meaningful changes.
+
+A small difference between posterior estimates would suggest that the current NHANES data provide sufficient information to dominate the prior specification. Larger differences would indicate greater sensitivity to historical prior information.
+
+\subsection{Posterior Predictive Assessment}
+
+Posterior predictive checks should be used to evaluate whether the observed diabetes outcome distribution is reasonably reproduced by each Bayesian model.
+
+The weakly informative and historically informed models should be compared to determine whether either prior specification produces noticeably different posterior predictive behavior.
+
+\subsection{Posterior Predicted Prevalence}
+
+The posterior median predicted diabetes prevalence and corresponding 95\% credible intervals should be reported separately for the two Bayesian models.
+
+Comparison of these distributions provides a population-level assessment of whether prior specification changes predicted diabetes burden in the study population.
+
+\subsection{Calibration}
+
+Calibration results should report the relationship between mean predicted probability and observed diabetes prevalence across prediction deciles.
+
+Models with predictions close to the 45-degree reference line indicate better agreement between predicted and observed prevalence.
+
+\subsection{Predictive Model Comparison}
+
+LOO results should be reported to describe differences in predictive performance between the weakly informative and historically informed Bayesian models.
+
+Where differences in predictive performance are small, the interpretation should emphasize prior robustness rather than selecting one model solely on the basis of minor differences in LOO estimates.
+
+% ============================================================
+% DISCUSSION
+% ============================================================
+
+\section{Discussion}
+
+This study evaluates the sensitivity of Bayesian logistic regression estimates of diabetes risk to alternative prior specifications using nationally representative NHANES data from August 2021 through August 2023.
+
+The central methodological comparison is between a Bayesian model using weakly informative priors and a Bayesian model incorporating historical information from NHANES 2013--2014. A conventional survey-weighted logistic regression model was included as a reference analysis.
+
+The use of an earlier NHANES cycle to construct informative priors provides a practical example of incorporating historical evidence into Bayesian epidemiologic modeling. Rather than treating the prior distribution as arbitrary, the informative priors were centered on posterior estimates obtained from an earlier analysis. This approach allows information from previous survey cycles to influence current inference while providing an explicit framework for evaluating the consequences of that choice.
+
+A major strength of the analysis is the direct comparison of multiple inferential frameworks. The survey-weighted logistic regression accounts explicitly for the NHANES complex sampling design, whereas the Bayesian models incorporate normalized examination weights into the likelihood. Comparing these approaches allows differences attributable to Bayesian prior specification and survey-modeling strategy to be considered separately.
+
+The prior-sensitivity analysis is particularly important because informative priors can affect posterior inference. When the current data contain substantial information about a parameter, the likelihood will generally dominate a moderately informative prior, resulting in similar posterior estimates under alternative prior distributions. Conversely, meaningful differences between posterior estimates under weak and informative priors suggest that prior assumptions contribute materially to the resulting inference.
+
+% ============================================================
+% STRENGTHS
+% ============================================================
+
+\subsection{Strengths}
+
+Several strengths should be noted.
+
+First, the study uses nationally representative NHANES data and incorporates the survey examination weights in both frequentist and Bayesian analyses.
+
+Second, the analysis explicitly evaluates prior sensitivity rather than reporting a single Bayesian model without examining the influence of prior assumptions.
+
+Third, historical information from a previous NHANES cycle is incorporated transparently through explicitly defined informative priors.
+
+Fourth, model assessment includes posterior predictive checks, convergence diagnostics, calibration, posterior predicted prevalence, and leave-one-out cross-validation.
+
+Finally, the comparison with a conventional survey-weighted logistic regression model provides an interpretable benchmark for the Bayesian results.
+
+% ============================================================
+% LIMITATIONS
+% ============================================================
+
+\subsection{Limitations}
+
+Several limitations should be considered.
+
+First, although five imputed datasets were generated using MICE, the current implementation used only the first completed imputed dataset for regression estimation. Therefore, the reported regression estimates do not represent pooled estimates across all five imputed datasets. Future analyses should incorporate all imputed datasets and appropriately combine the resulting estimates.
+
+Second, the Bayesian models incorporated normalized NHANES examination weights but did not explicitly model the primary sampling units and sampling strata. Consequently, these models do not fully reproduce the design-based variance estimation of the survey-weighted frequentist model. Differences between the Bayesian and survey-weighted estimates may therefore reflect both Bayesian prior specification and differences in the treatment of the complex survey design.
+
+Third, the informative priors were based on posterior means from the earlier NHANES 2013--2014 analysis and used a common standard deviation of 0.25. Although this provides an explicit and reproducible approach to incorporating historical information, the choice of prior variance is itself a modeling assumption.
+
+Fourth, the analysis is cross-sectional and therefore estimates associations rather than causal effects. The observed relationships between age, BMI, sex, race/ethnicity, and diabetes should not be interpreted as causal.
+
+Fifth, diabetes diagnosis was based on the NHANES questionnaire definition rather than a unified clinical diagnosis derived solely from laboratory measurements. Therefore, the outcome represents reported diabetes diagnosis rather than necessarily all diabetes cases in the population.
+
+% ============================================================
+% CONCLUSION
+% ============================================================
+
+\section{Conclusion}
+
+This study presents a prior-sensitivity framework for Bayesian logistic regression of diabetes risk using NHANES 2021--2023 data. By comparing weakly informative Bayesian priors with historically informed priors derived from NHANES 2013--2014, the analysis evaluates the extent to which posterior estimates depend on prior assumptions.
+
+The inclusion of a survey-weighted logistic regression model provides an additional benchmark for evaluating Bayesian estimates. Together, these analyses provide a transparent framework for assessing the robustness of Bayesian epidemiologic inference to prior specification.
+
+Future analyses should extend this framework by pooling across all multiply imputed datasets and by incorporating the NHANES primary sampling units and strata more explicitly into the Bayesian model. Such extensions would provide a more complete Bayesian treatment of missing data and the complex survey design.
+
+% ============================================================
+% DATA AVAILABILITY
+% ============================================================
+
+\section*{Data Availability}
+
+The NHANES data used in this study are publicly available through the National Center for Health Statistics and can be accessed through the NHANES data portal. The analysis used publicly available demographic, body-measures, and diabetes questionnaire files from the August 2021--August 2023 survey cycle.
+
+% ============================================================
+% CODE AVAILABILITY
+% ============================================================
+
+\section*{Code Availability}
+
+The statistical analyses were implemented in R using publicly available R packages. The analysis code includes data preparation, multiple imputation, survey-weighted logistic regression, Bayesian logistic regression under weakly informative and historically informed priors, prior sensitivity analyses, posterior predictive checks, calibration assessment, posterior prevalence estimation, and leave-one-out cross-validation.
+
+% ============================================================
+% REFERENCES PLACEHOLDER
+% ============================================================
+
+\bibliographystyle{plainnat}
+
+% Add references here, for example:
+% \bibliography{references}
+
+\end{document}
+
